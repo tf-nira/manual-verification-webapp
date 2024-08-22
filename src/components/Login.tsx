@@ -10,7 +10,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleClear = () => {
-    
+    setUsername('');
+    setPassword('');
   }
 
   const handleLogin = () => {
