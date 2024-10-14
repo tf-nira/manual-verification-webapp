@@ -32,7 +32,7 @@ jobs:
           - SERVICE_LOCATION: 'manual-verification-webapp'
             SERVICE_NAME: 'manual-verification-webapp'
             NPM_BUILD: true
-            BUILD_ARTIFACT: 'manual-verification-webappmanual-verification-webapp'
+            BUILD_ARTIFACT: 'manual-verification-webapp'
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
     uses: mosip/kattu/.github/workflows/docker-build.yml@master
