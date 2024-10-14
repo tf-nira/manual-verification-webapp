@@ -12,13 +12,15 @@ on:
       - master
       - 1.*
       - develop
+      - main
+      - tf_nira_dev
       - MOSIP*
 
 jobs:
   build-manual-verification-webapp:
-    uses: mosip/kattu/.github/workflows/npm-build.yml@master
+    uses: tf-nira/manual-verification-webapp/.github/workflows/npm-build.yml@tf_nira_dev
     with:
-      SERVICE_LOCATION: manual-verification-webapp
+      SERVICE_LOCATION: .
       BUILD_ARTIFACT: manual-verification-webapp
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -28,7 +30,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - SERVICE_LOCATION: 'manual-verification-webapp'
+          - SERVICE_LOCATION: '.'
             SERVICE_NAME: 'manual-verification-webapp'
             NPM_BUILD: true
             BUILD_ARTIFACT: 'manual-verification-webapp'
