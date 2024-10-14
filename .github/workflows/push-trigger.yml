@@ -12,11 +12,12 @@ on:
       - master
       - 1.*
       - develop
+      - tf_nira_dev
       - MOSIP*
 
 jobs:
   build-manual-verification-webapp:
-    uses: mosip/kattu/.github/workflows/npm-build.yml@master
+    uses: tf-nira/manual-verification-webapp/.github/workflows/npm-build.yml@tf_nira_dev
     with:
       SERVICE_LOCATION: manual-verification-webapp
       BUILD_ARTIFACT: manual-verification-webapp
@@ -31,7 +32,7 @@ jobs:
           - SERVICE_LOCATION: 'manual-verification-webapp'
             SERVICE_NAME: 'manual-verification-webapp'
             NPM_BUILD: true
-            BUILD_ARTIFACT: 'manual-verification-webapp'
+            BUILD_ARTIFACT: 'manual-verification-webappmanual-verification-webapp'
       fail-fast: false
     name: ${{ matrix.SERVICE_NAME }}
     uses: mosip/kattu/.github/workflows/docker-build.yml@master
