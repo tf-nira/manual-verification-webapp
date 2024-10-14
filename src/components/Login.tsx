@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { USERNAME, PASSWORD, CLEAR, LOGIN } from '../config/Constants'
 
 const Login: React.FC = () => {
 
@@ -24,7 +25,7 @@ const Login: React.FC = () => {
     <section className="h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0 ">
       <div className="w-full md:w-1/2 max-w-xl bg-gray-200 p-16 rounded-lg shadow-md mb-50">
         <div className="mb-5 flex justify-between">
-          <label className="block text-2xl font-semibold mr-5" htmlFor="username">Username</label>
+          <label className="block text-2xl font-semibold mr-5" htmlFor="username"> { USERNAME } </label>
           <input 
             id="username" 
             className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded" 
@@ -35,7 +36,7 @@ const Login: React.FC = () => {
         </div>
 
         <div className="mb-5 flex justify-between">
-          <label className="block text-2xl font-semibold mr-7" htmlFor="password">Password</label>
+          <label className="block text-2xl font-semibold mr-7" htmlFor="password"> { PASSWORD } </label>
           <input 
             id="password" 
             className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded" 
@@ -51,7 +52,7 @@ const Login: React.FC = () => {
               className="mt-4 bg-blue-600 hover:bg-blue-700 px-6 py-3 text-white uppercase rounded text-l tracking-wider" type="submit"
               onClick={handleClear}
               >
-                Clear
+                { CLEAR }
             </button>
           </div>
           <div className="text-center md:text-left">
@@ -59,7 +60,7 @@ const Login: React.FC = () => {
               className="mt-4 bg-blue-600 hover:bg-blue-700 px-6 py-3 text-white uppercase rounded text-l tracking-wider" type="submit"
               onClick={handleLogin}
               >
-                Login
+                { LOGIN }
             </button>
           </div>
         </div>
