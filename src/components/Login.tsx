@@ -7,7 +7,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const { login } = useAuth()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleClear = () => {
     setUsername('');

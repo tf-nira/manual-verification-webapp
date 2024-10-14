@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react"
+import { useAuth } from "../context/AuthContext"
 
 const Navbar: React.FC = () => {
 
+  const [dropdownVisible, setDropDownVisible] = useState(false)
+  const { logout } = useAuth()
+
   const handleUserProfile = () => {
-    console.log("clicked")
+    setDropDownVisible(!dropdownVisible)
+  }
+
+  const handleLogout = () => {
+    logout()
+    setDropDownVisible(false)
   }
 
   return (
@@ -19,6 +28,17 @@ const Navbar: React.FC = () => {
         >
           User Profile
         </button>
+
+        {dropdownVisible && (
+          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+            <button 
+              className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   )
