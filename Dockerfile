@@ -42,7 +42,7 @@ COPY default.conf /etc/nginx/conf.d/
 COPY dist ${base_path}
 
 # Change ownership of copied files
-RUN chown -R ${container_user}:${container_user} ${base_path}/assets/i18n
+RUN [ -d ${base_path}/assets/i18n ] && chown -R ${container_user}:${container_user} ${base_path}/assets/i18n || echo "Directory does not exist, skipping chown"
 
 # Use the created user for running commands
 USER ${container_user_uid}:${container_user_gid}
