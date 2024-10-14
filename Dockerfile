@@ -1,29 +1,57 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine AS build
-
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json or yarn.lock files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
-COPY . .
-
-# Build the Vite app for production
-RUN npm run build
-
-# Use a lightweight web server to serve the production build
+# Base image for serving the app using Nginx
 FROM nginx:alpine
 
-# Copy the production build from the previous stage to the web server's directory
-COPY --from=build /app/dist /usr/share/nginx/html
+# Build arguments for labeling the image
+ARG SOURCE
+ARG COMMIT_HASH
+ARG COMMIT_ID
+ARG BUILD_TIME
+LABEL source=${SOURCE}
+LABEL commit_hash=${COMMIT_HASH}
+LABEL commit_id=${COMMIT_ID}
+LABEL build_time=${BUILD_TIME}
 
-# Expose port 80 to the outside world
+# Environment variables
+ENV base_path=/usr/share/nginx/html
+
+# Create build-time arguments for container user and i18n URL (if applicable)
+ARG container_user=mosip
+ARG container_user_group=mosip
+ARG container_user_uid=1001
+ARG container_user_gid=1001
+
+# Optional i18n bundle URL (can be passed during Docker build)
+ARG manualverification_i18n_bundle_url_arg=http://artifactory-service/artifactory/libs-release-local/i18n/manual-verification-i18n-bundle.zip
+ENV manualverification_i18n_bundle_url_env=${manualverification_i18n_bundle_url_arg}
+
+# Install necessary packages and set up user
+RUN apk --no-cache add unzip wget \
+    && addgroup -g ${container_user_gid} ${container_user_group} \
+    && adduser -u ${container_user_uid} -G ${container_user_group} -s /bin/sh -D ${container_user} \
+    && mkdir -p /var/run/nginx /var/tmp/nginx \
+    && chown -R ${container_user}:${container_user} /usr/share/nginx /var/run/nginx /var/tmp/nginx
+
+# Set working directory for the user
+WORKDIR /home/${container_user}
+
+# Copy custom nginx config and default site config
+COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/
+
+# Copy the built app files to the base_path
+COPY dist ${base_path}
+
+# Change ownership of copied files
+RUN chown -R ${container_user}:${container_user} ${base_path}/assets/i18n
+
+# Use the created user for running commands
+USER ${container_user_uid}:${container_user_gid}
+
+# Expose the default port for Nginx
 EXPOSE 80
 
-# Start the web server
-CMD ["nginx", "-g", "daemon off;"]
+# Commands to run when the container starts
+CMD wget -q --show-progress "${manualverification_i18n_bundle_url_env}" -O "${base_path}/assets/i18n/manual-verification-i18n-bundle.zip"; \
+    cd ${base_path}/assets/i18n ; \
+    unzip -o manual-verification-i18n-bundle.zip ; \
+    nginx -g 'daemon off;'
