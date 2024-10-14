@@ -1,0 +1,47 @@
+name: Manual-Verification-webapp build upon a push
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - '!release-branch'
+      - release*
+      - master
+      - 1.*
+      - develop
+      - MOSIP*
+
+jobs:
+  build-manual-verification-webapp:
+    uses: mosip/kattu/.github/workflows/npm-build.yml@master
+    with:
+      SERVICE_LOCATION: manual-verification-webapp
+      BUILD_ARTIFACT: manual-verification-webapp
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  build-docker-manual-verification-webapp:
+    needs: build-manual-verification-webapp
+    strategy:
+      matrix:
+        include:
+          - SERVICE_LOCATION: 'manual-verification-webapp'
+            SERVICE_NAME: 'manual-verification-webapp'
+            NPM_BUILD: true
+            BUILD_ARTIFACT: 'manual-verification-webapp'
+      fail-fast: false
+    name: ${{ matrix.SERVICE_NAME }}
+    uses: mosip/kattu/.github/workflows/docker-build.yml@master
+    with:
+      SERVICE_LOCATION: ${{ matrix.SERVICE_LOCATION }}
+      SERVICE_NAME: ${{ matrix.SERVICE_NAME }}
+      NPM_BUILD: ${{ matrix.NPM_BUILD }}
+      BUILD_ARTIFACT: ${{ matrix.BUILD_ARTIFACT }}
+    secrets:
+      DEV_NAMESPACE_DOCKER_HUB: ${{ secrets.DEV_NAMESPACE_DOCKER_HUB }}
+      ACTOR_DOCKER_HUB: ${{ secrets.ACTOR_DOCKER_HUB }}
+      RELEASE_DOCKER_HUB: ${{ secrets.RELEASE_DOCKER_HUB }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}

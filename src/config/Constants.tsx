@@ -1,0 +1,7 @@
+export const USERNAME = 'Username'
+export const PASSWORD = 'Password'
+export const LOGIN = 'Login'
+export const LOGOUT = 'Logout'
+export const CLEAR = 'Clear'
+export const USER_PROFILE = 'User Profile'
+export const HEADER = 'Header'
