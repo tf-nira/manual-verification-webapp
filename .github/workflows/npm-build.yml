@@ -41,11 +41,11 @@ jobs:
           ${{ runner.os }}-npm-
 
     - name: NPM Install
-      run: cd ${{ inputs.SERVICE_LOCATION }} && npm install --legacy-peer-deps
+      run: cd ${{ inputs.SERVICE_LOCATION }} && npm install
 
     - name: NPM Build for NG
       if: ${{ inputs.NPM_BUILD_TYPE == 'NG' }}
-      run: cd ${{ inputs.SERVICE_LOCATION }} && npm run-script build -- --prod --base-href . --output-path=dist
+      run: cd ${{ inputs.SERVICE_LOCATION }} && npm run-script build -- --base-href . --output-path=dist
 
     - name: NPM Build for BOB
       if: ${{ inputs.NPM_BUILD_TYPE == 'BOB' }}
